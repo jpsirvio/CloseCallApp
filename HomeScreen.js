@@ -8,7 +8,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        `https://api.nasa.gov/neo/rest/v1/feed?start_date=${new Date().toISOString().slice(0,10)}&end_date=${new Date().toISOString().slice(0,10)}&api_key=7kAlXl3XmDxE1rf6jEXYeRLjW67ZxeXrQiQwmRNN`
+        `https://api.nasa.gov/neo/rest/v1/feed?start_date=${new Date().toISOString().slice(0,10)}&end_date=${new Date().toISOString().slice(0,10)}&api_key=${process.env.NASA_API_KEY}`
       );
       setData(result.data.near_earth_objects[new Date().toISOString().slice(0,10)]);
     };
@@ -27,7 +27,6 @@ const HomeScreen = ({ navigation }) => {
           />
         )}
       />
-      <Button title="Go to Saved NeoWs" onPress={() => navigation.navigate('Saved NeoWs')} />
     </View>
   );
 };
