@@ -31,7 +31,7 @@ function TabNavigator() {
             iconName = focused ? 'public' : 'public';
           } else if (route.name === 'Saved NeoWs') {
             iconName = focused ? 'storage' : 'storage';
-          } else if (route.name === 'Help') {
+          } else if (route.name === 'Info') {
             iconName = focused ? 'help' : 'help';
           }
 
@@ -41,7 +41,7 @@ function TabNavigator() {
     >
       <Tab.Screen name="Current NeoWs " component={HomeStack} options={{ headerShown: false }} />
       <Tab.Screen name="Saved NeoWs" component={SavedNeoWsScreen} />
-      <Tab.Screen name="Help" component={HelpScreen} />
+      <Tab.Screen name="Info" component={HelpScreen} />
     </Tab.Navigator>
   );
 }
