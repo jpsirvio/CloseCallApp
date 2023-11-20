@@ -18,8 +18,17 @@ const SavedNeoWsScreen = ({ navigation }) => {
         });
       });
     };
-    fetchData();
-  }, []);
+
+    // Use the `focus` event to run the fetchData function when the view is focused
+    const focusListener = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      focusListener();
+    };
+  }, [navigation]); // Include `navigation` in the dependency array
 
   return (
     <View>

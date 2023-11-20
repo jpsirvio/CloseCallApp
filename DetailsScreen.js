@@ -1,147 +1,114 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, Text, TextInput, View } from 'react-native';
+import { Alert, Button, Text, View, Linking, TouchableOpacity } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 
 const DetailsScreen = ({ route, navigation }) => {
     const { item, saved } = route.params;
-    const [note, setNote] = useState('');
-    const [lastUpdated, setLastUpdated] = useState('');
     const data = Object.entries(item).map(([key, value]) => ({ key, value: JSON.stringify(value) }));
-
-    useEffect(() => {
-        if (saved) {
-          setNote(item.note || '');
-          setLastUpdated(item.lastUpdated || '');
+    
+  // Unsaved item only!
+  // Save NeoW to database
+  // First make a check if same unique item already exists
+  const saveData = () => {
+    const db = SQLite.openDatabase('my.db');
+  
+    db.transaction((tx) => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, data TEXT NOT NULL);'
+      );
+      tx.executeSql(
+        'SELECT * FROM items WHERE data LIKE ?;',
+        [`%${item.name}%`],
+        (tx, results) => {
+          if (results.rows.length > 0) {
+            Alert.alert('This NeoW is already saved.');
+          } else {
+            tx.executeSql(
+              'INSERT INTO items (data) VALUES (?);',
+              [JSON.stringify(item)],
+              (tx, results) => {
+                console.log('Results', results.rowsAffected);
+                if (results.rowsAffected > 0) {
+                  console.log('Success');
+                } else {
+                  console.log('Failed');
+                }
+              }
+            );
+          }
         }
-      }, [saved]);
+      );
+    });
+  };
+  
     
-    // Unsaved item only!
-    // Save NeoW to database
-    // First make a check if same unique item already exists
-    const saveData = () => {
-        const db = SQLite.openDatabase('my.db');
-        db.transaction((tx) => {
-          tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY NOT NULL, data TEXT NOT NULL, note TEXT, lastUpdated TEXT);'
-          );
-          tx.executeSql(
-            'SELECT * FROM items WHERE data LIKE ?;',
-            [`%${item.name}%`],
-            (tx, results) => {
-              if (results.rows.length > 0) {
-                Alert.alert('This NeoW is already saved.');
-              } else {
-                const currentDate = new Date().toISOString();
-                tx.executeSql(
-                  'INSERT INTO items (data, note, lastUpdated) VALUES (?, ?, ?);',
-                  [JSON.stringify(item), note, currentDate],
-                  (tx, results) => {
-                    console.log('Results', results.rowsAffected);
-                    if (results.rowsAffected > 0) {
-                      console.log('Success');
-                      setLastUpdated(currentDate);
-                    } else {
-                      console.log('Failed');
-                    }
-                  }
-                );
-              }
-            }
-          );
-        });
-    };
+  // Saved item only!
+  // Delete NeoW from database
+  const deleteItem = () => {
+    const db = SQLite.openDatabase('my.db');
 
-    // Saved item only!
-    // Save note for saved NeoW
-    const saveNote = () => {
-        const db = SQLite.openDatabase('my.db');
-        db.transaction((tx) => {
-          const currentDate = new Date().toISOString();
-          tx.executeSql(
-            'UPDATE items SET note = ?, lastUpdated = ? WHERE id = ?;',
-            [note, currentDate, item.id],
-            (tx, results) => {
-              console.log('Results', results.rowsAffected);
-              if (results.rowsAffected > 0) {
-                console.log('Success');
-                setLastUpdated(currentDate);
-              } else {
-                console.log('Failed');
-              }
-            }
-          );
-        });
-      };      
-    
-    // Saved item only!
-    // Delete NeoW from database
-    const deleteData = () => {
-        const db = SQLite.openDatabase('my.db');
-        db.transaction((tx) => {
+    db.transaction(
+      (tx) => {
         tx.executeSql(
-            'DELETE FROM items WHERE id = ?;',
-            [item.id],
-            (tx, results) => {
-            console.log('Results', results.rowsAffected);
+          'DELETE FROM items WHERE data = ?;',
+          [JSON.stringify(item)],
+          (_, results) => {
             if (results.rowsAffected > 0) {
-                console.log('Success');
-                navigation.navigate('HomeStack');
+              console.log('Deletion success');
+              navigation.navigate('Saved NeoWs');
+              // Optionally, you can navigate here or perform any other actions after successful deletion
             } else {
-                console.log('Failed');
+              console.log('Deletion failed');
+              // Optionally, show an alert or handle failure
             }
-            }
+          },
+          (_, error) => {
+            console.error('Error during DELETE:', error);
+            // Optionally, show an alert or handle error
+          }
         );
-        });
-    };
-    // Deletion confirmation
-    const confirmDelete = () =>
-        Alert.alert(
-        'Delete Item',
-        'Are you sure you want to delete this item?',
-        [
-            {
-            text: 'Cancel',
-            style: 'cancel'
-            },
-            { text: 'OK', onPress: deleteData }
-        ],
-        { cancelable: false }
-        );
-    
-    // VIEW:
-    // List NeoW data
-    // If saved Neow:
-    //  - show Note field and Save Note Button
-    //  - show Delete button
-    // If non-saved NeoW:
-    //  - show Save button
-    return (
-        <View>
-        <FlatList
-            data={data}
-            keyExtractor={(item) => item.key}
-            renderItem={({ item }) => (
-            <View>
-                <Text style={{ fontWeight: 'bold' }}>{item.key}:</Text>
-                <Text>{item.value}</Text>
-            </View>
-            )}
-        />
-        {saved && (
-        <View>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={setNote}
-            value={note}
-          />
-          {lastUpdated && <Text>Last updated: {lastUpdated}</Text>}
-          <Button title="Save Note" onPress={saveNote} />
-        </View>
-        )}
-        {!saved && <Button title="Save" onPress={saveData} />}
-        {saved && <Button title="Delete" color="red" onPress={confirmDelete} />}
-        </View>
+      },
+      (error) => {
+        console.error('Error during transaction:', error);
+        // Optionally, show an alert or handle error
+      }
     );
+  };
+
+
+    
+  // VIEW:
+  // List NeoW data
+  // If saved Neow:
+  //  - show Delete button
+  // If non-saved NeoW:
+  //  - show Save button
+  return (
+    <View>
+    <View>
+      <Text style={{ fontWeight: 'bold' }}>Name:</Text>
+      <Text>{item.name}</Text>
+      <Text style={{ fontWeight: 'bold' }}>ID:</Text>
+      <Text>{item.id}</Text>
+      <Text style={{ fontWeight: 'bold' }}>Potentially hazardous?</Text>
+      <Text>{item.is_potentially_hazardous_asteroid?'true':'false'}</Text>
+      <Text style={{ fontWeight: 'bold' }}>NASA URL:</Text>
+      <TouchableOpacity onPress={() => Linking.openURL(item.nasa_jpl_url)}>
+        <Text style={{color: 'blue'}}>{item.nasa_jpl_url}</Text>
+      </TouchableOpacity>
+      <Text style={{ fontWeight: 'bold' }}>Absolute magnitude:</Text>
+      <Text>{item.absolute_magnitude_h}</Text>       
+      <Text style={{ fontWeight: 'bold' }}>Estimated diameter:</Text>
+      <Text>{item.estimated_diameter.meters.estimated_diameter_min.toFixed(2)} - {item.estimated_diameter.meters.estimated_diameter_max.toFixed(2)} m</Text>
+      <Text style={{ fontWeight: 'bold' }}>Relative Velocity</Text>  
+      <Text>{parseFloat(item.close_approach_data[0].relative_velocity.kilometers_per_hour).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km/s</Text>
+      <Text style={{ fontWeight: 'bold' }}>Miss Distance</Text>
+      <Text>{parseFloat(item.close_approach_data[0].miss_distance.kilometers).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km</Text>            
+    </View>
+    {!saved && <Button title="Save" onPress={saveData} />}
+    {saved && <Button title="Remove saved NeoW" color="red" onPress={deleteItem} />}
+    </View>
+  );
 };
 
 export default DetailsScreen;

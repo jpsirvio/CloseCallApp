@@ -16,10 +16,18 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        "tabBarActiveTintColor": "tomato",
+        "tabBarInactiveTintColor": "gray",
+        "tabBarStyle": [
+          {
+            "display": "flex"
+          },
+          null
+        ],
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Current NeoWs') {
+          if (route.name === 'Current NeoWs ') {
             iconName = focused ? 'public' : 'public';
           } else if (route.name === 'Saved NeoWs') {
             iconName = focused ? 'storage' : 'storage';
@@ -30,12 +38,8 @@ function TabNavigator() {
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
-      tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-      }}
     >
-      <Tab.Screen name="Current NeoWs" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Current NeoWs " component={HomeStack} options={{ headerShown: false }} />
       <Tab.Screen name="Saved NeoWs" component={SavedNeoWsScreen} />
       <Tab.Screen name="Help" component={HelpScreen} />
     </Tab.Navigator>

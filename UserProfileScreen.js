@@ -9,7 +9,7 @@ const UserProfileScreen = () => {
   return (
     <View>
       <Button
-        title="Back to Home"
+        title="Back"
         onPress={() => navigation.navigate('Main')}
       />
       <Input
