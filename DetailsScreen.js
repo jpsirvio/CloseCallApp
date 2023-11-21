@@ -7,7 +7,7 @@ const DetailsScreen = ({ route, navigation }) => {
     const data = Object.entries(item).map(([key, value]) => ({ key, value: JSON.stringify(value) }));
     
   // Unsaved item only!
-  // Save NeoW to database
+  // Save NEO to database
   // First make a check if same unique item already exists
   const saveData = () => {
     const db = SQLite.openDatabase('my.db');
@@ -21,7 +21,7 @@ const DetailsScreen = ({ route, navigation }) => {
         [`%${item.name}%`],
         (tx, results) => {
           if (results.rows.length > 0) {
-            Alert.alert('This NeoW is already saved.');
+            Alert.alert('This NEO is already saved.');
           } else {
             tx.executeSql(
               'INSERT INTO items (data) VALUES (?);',
@@ -43,7 +43,7 @@ const DetailsScreen = ({ route, navigation }) => {
   
     
   // Saved item only!
-  // Delete NeoW from database
+  // Delete NEO from database
   const deleteItem = () => {
     const db = SQLite.openDatabase('my.db');
 
@@ -55,7 +55,7 @@ const DetailsScreen = ({ route, navigation }) => {
           (_, results) => {
             if (results.rowsAffected > 0) {
               console.log('Deletion success');
-              navigation.navigate('Saved NeoWs');
+              navigation.navigate('Saved NEOs');
               // Optionally, you can navigate here or perform any other actions after successful deletion
             } else {
               console.log('Deletion failed');
@@ -78,10 +78,10 @@ const DetailsScreen = ({ route, navigation }) => {
 
     
   // VIEW:
-  // List NeoW data
-  // If saved Neow:
+  // List NEO data
+  // If saved NEO:
   //  - show Delete button
-  // If non-saved NeoW:
+  // If non-saved NEO:
   //  - show Save button
   return (
     <View>
@@ -106,7 +106,7 @@ const DetailsScreen = ({ route, navigation }) => {
       <Text>{parseFloat(item.close_approach_data[0].miss_distance.kilometers).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km</Text>            
     </View>
     {!saved && <Button title="Save" onPress={saveData} />}
-    {saved && <Button title="Remove saved NeoW" color="red" onPress={deleteItem} />}
+    {saved && <Button title="Remove saved NEO" color="red" onPress={deleteItem} />}
     </View>
   );
 };

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CloseCall",
-    "slug": "CloseCall",
+    "name": "closecall",
+    "slug": "closecall",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

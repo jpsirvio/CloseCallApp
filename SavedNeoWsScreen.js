@@ -23,12 +23,11 @@ const SavedNeoWsScreen = ({ navigation }) => {
     const focusListener = navigation.addListener('focus', () => {
       fetchData();
     });
-
     // Cleanup the event listener when the component is unmounted
     return () => {
       focusListener();
     };
-  }, [navigation]); // Include `navigation` in the dependency array
+  }, [navigation]);
 
   return (
     <View>
