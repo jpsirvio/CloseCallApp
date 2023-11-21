@@ -36,3 +36,6 @@ yarn-error.*
 
 # environmental variables
 *.env
+
+# Firebase config
+FirebaseConfig.js
