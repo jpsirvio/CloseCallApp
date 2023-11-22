@@ -98,24 +98,33 @@ export default DetailsScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View>
+        
         <Text style={styles.detailsTextHeader}>Name:</Text>
         <Text style={styles.detailsText}>{item.name}</Text>
+
         <Text style={styles.detailsTextHeader}>ID:</Text>
         <Text style={styles.detailsText}>{item.id}</Text>
+
         <Text style={styles.detailsTextHeader}>Potentially hazardous?</Text>
         <Text style={styles.detailsText}>{item.is_potentially_hazardous_asteroid?'true':'false'}</Text>
+
         <Text style={styles.detailsTextHeader}>NASA URL:</Text>
         <TouchableOpacity onPress={() => Linking.openURL(item.nasa_jpl_url)}>
           <Text style={styles.detailsLink}>{item.nasa_jpl_url}</Text>
         </TouchableOpacity>
+
         <Text style={styles.detailsTextHeader}>Absolute magnitude:</Text>
         <Text style={styles.detailsText}>{item.absolute_magnitude_h}</Text>       
+
         <Text style={styles.detailsTextHeader}>Estimated diameter:</Text>
         <Text style={styles.detailsText}>{item.estimated_diameter.meters.estimated_diameter_min.toFixed(2)} - {item.estimated_diameter.meters.estimated_diameter_max.toFixed(2)} m</Text>
+        
         <Text style={styles.detailsTextHeader}>Relative Velocity</Text>  
         <Text style={styles.detailsText}>{parseFloat(item.close_approach_data[0].relative_velocity.kilometers_per_hour).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km/s</Text>
+        
         <Text style={styles.detailsTextHeader}>Miss Distance</Text>
         <Text style={styles.detailsText}>{parseFloat(item.close_approach_data[0].miss_distance.kilometers).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km</Text>            
+      
       </View>
       {!saved && <Button title="Save" onPress={saveData} />}
       {saved && <Button title="Remove saved NEO" color="red" onPress={deleteItem} />}

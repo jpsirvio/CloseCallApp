@@ -1,12 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { StatusBar } from 'react-native'
 import { Icon } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Header } from 'react-native-elements';
-import { onAuthStateChanged } from "firebase/auth"
-import { FIREBASE_AUTH } from './FirebaseConfig';
 import CurrentNeosNav from './CurrentNeosNav';
 import SavedNeoWsScreen from './views/SavedNeoWsScreen';
 import UserProfileScreen from './views/UserProfileScreen';
@@ -66,7 +63,7 @@ function AppHeader() {
     <Header
       statusBarProps={{ barStyle: 'light-content' }}
       barStyle="light-content"
-      leftComponent={{ text: 'CloseCall', style: { color: 'orange' }, onPress: () => navigation.navigate('Main') }}
+      leftComponent={{ text: 'CloseCall', style: { color: 'orange', fontWeight: '700', fontSize: 18, }, onPress: () => navigation.navigate('Main') }}
       rightComponent={{ icon: 'person', color: 'orange', onPress: () => navigation.navigate('UserProfile') }}
       containerStyle={{
         backgroundColor: 'black',
@@ -76,21 +73,12 @@ function AppHeader() {
   );
 }
 
-// Header navigation
-// Login screen by default
 // Check user login state
 export default function App() {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user', user);
-      setUser(user);
-    })
-  }, [])
-
+// Header navigation
+// Login screen by default
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor="black" barStyle="light-content" />
       <AppHeader />
       <Stack.Navigator initialRouteName='UserProfile' screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={TabNavigator} />
