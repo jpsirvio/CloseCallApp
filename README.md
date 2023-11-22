@@ -40,9 +40,8 @@ export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 ```
 ## Technical details
-This application uses React Native, SQLite and Firebase. Modules used by the application are react-navigation/native and react-navigation/bottom-tabs for navigation, axios for API calls, expo-sqlite for database operations, react-native-elements for UI layout and firebase/app, firebase/auth for authentication.
+This application uses React Native, Expo, SQLite and Firebase. Modules used by the application are react-navigation, react-navigation/native, react-navigation/bottom-tabs and react-navigation/stack for navigation, axios for API calls, expo-sqlite for database operations, react-native-elements for UI layout and firebase, firebase/app, firebase/auth for authentication.
 ## Known bugs
 Navigating to NEO details screen in Saved NEOs highlights Current NEOs icon.
 Navigating back from Current NEOs screen to Current NEOs returns to the NEO details screen if one was open, instead of the Current NEOs screen.
-## To do
-* Code cleanup
+NASA API is unstable at times causing problems with fetching current NEO data.
