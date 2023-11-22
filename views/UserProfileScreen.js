@@ -54,8 +54,15 @@ export default UserProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      {user && <Text style={styles.detailsText}>Signed in as {user.email}</Text>}
-      <KeyboardAvoidingView behavior='padding'>
+      {user && <View><Text style={styles.detailsText}>Signed in as {user.email}</Text>
+        <>
+          <TouchableOpacity
+            style={styles.itemButton}
+            onPress={() => FIREBASE_AUTH.signOut()}>
+              <Text style={styles.itemButtonText}>Sign out</Text>
+          </TouchableOpacity>
+        </></View>}
+      {!user && <KeyboardAvoidingView behavior='padding'>
         <Input
           value={email}
           placeholder='User Name'
@@ -90,7 +97,7 @@ export default UserProfileScreen = () => {
             </TouchableOpacity>
           </>
         }
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView>}
     </View>
   );
 };

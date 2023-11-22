@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { FlatList, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { onAuthStateChanged } from '@firebase/auth';
 import * as SQLite from 'expo-sqlite';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 export default SavedNeoWsScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -20,7 +22,7 @@ export default SavedNeoWsScreen = ({ navigation }) => {
       });
     };
 
-    // run the fetchData() when the view is focused
+    // run the fetchData() when the view is focused to update the flatlist items
     const focusListener = navigation.addListener('focus', () => {
       fetchData();
     });
@@ -30,21 +32,33 @@ export default SavedNeoWsScreen = ({ navigation }) => {
     };
   }, [navigation]);
 
+    // Check if user is signed in
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      onAuthStateChanged(FIREBASE_AUTH, (user) => {
+        console.log('user', user);
+        setUser(user);
+      })
+    }, [])
+
   return (
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.itemButton}
-            onPress={() => navigation.navigate('Details', { item, saved: true })}
-          >
-            <Text style={styles.itemButtonText}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+      {user &&
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.itemButton}
+              onPress={() => navigation.navigate('Details', { item, saved: true })}
+            >
+              <Text style={styles.itemButtonText}>{item.name}</Text>
+            </TouchableOpacity>
+          )}
+        />}
+      {!user && 
+        <Text style={styles.detailsText}>Please sign in to view saved NEOs.</Text>}
+      </View>
   );
 };
 
