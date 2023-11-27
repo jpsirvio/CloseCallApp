@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 
 export default CurrentNeosScreen = ({ navigation }) => {
@@ -29,10 +29,12 @@ export default CurrentNeosScreen = ({ navigation }) => {
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Button
-            title={item.name}
+          <TouchableOpacity
+            style={styles.itemButton}
             onPress={() => navigation.navigate('Details', { item })}
-          />
+          >
+            <Text style={styles.itemButtonText}>{item.name}</Text>
+          </TouchableOpacity>
         )}
       />
     </View>

@@ -10,7 +10,7 @@ export default function CurrentNeosNav() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#2F4F4F', // Set the background color of the header
+          backgroundColor: 'black', // Set the background color of the header
         },
         headerTintColor: 'white', // Set the text color of the header
         headerTitleStyle: {
@@ -18,7 +18,7 @@ export default function CurrentNeosNav() {
         },
       }}
     >
-      <Stack.Screen name="Current NEOs" component={CurrentNeosScreen} />
+      <Stack.Screen name="Current NEOs" component={CurrentNeosScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );

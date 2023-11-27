@@ -126,8 +126,14 @@ export default DetailsScreen = ({ route, navigation }) => {
         <Text style={styles.detailsText}>{parseFloat(item.close_approach_data[0].miss_distance.kilometers).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km</Text>            
       
       </View>
-      {!saved && <Button title="Save" onPress={saveData} />}
-      {saved && <Button title="Remove saved NEO" color="red" onPress={deleteItem} />}
+      {!saved && <TouchableOpacity 
+        style={styles.saveButton} onPress={saveData}>
+          <Text style={styles.itemButtonText}>Save NEO</Text>
+      </TouchableOpacity>}
+      {saved && <TouchableOpacity 
+        style={styles.deleteButton} onPress={deleteItem}>
+          <Text style={styles.itemButtonText}>Remove saved NEO</Text>
+      </TouchableOpacity>}
     </View>
   );
 };
@@ -170,5 +176,20 @@ const styles= StyleSheet.create({
     fontWeight: '400',
     fontSize: 16,
   },
-
+  saveButton: {
+    backgroundColor: '#1E90FF',
+    width: '97%',
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  deleteButton: {
+    backgroundColor: '#DC143C',
+    width: '97%',
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
 })

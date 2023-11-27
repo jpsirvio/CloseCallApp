@@ -42,13 +42,13 @@ function TabNavigator() {
       <Tab.Screen name="Current NEOs " component={CurrentNeosNav} options={{ headerShown: false }} />
       <Tab.Screen name="Saved NEOs" component={SavedNeoWsScreen}   options={{
         headerStyle: {
-          backgroundColor: '#2F4F4F', // Set the background color of the header
+          backgroundColor: 'black', // Set the background color of the header
         },
         headerTintColor: 'white', // Set the text color of the header
   }} />
       <Tab.Screen name="Info" component={HelpScreen}   options={{
         headerStyle: {
-          backgroundColor: '#2F4F4F', // Set the background color of the header
+          backgroundColor: 'black', // Set the background color of the header
         },
         headerTintColor: 'white', // Set the text color of the header
   }} />
