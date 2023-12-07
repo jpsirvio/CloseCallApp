@@ -18,7 +18,7 @@ export default function CurrentNeosNav() {
         },
       }}
     >
-      <Stack.Screen name="Current NEOs" component={CurrentNeosScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="Current NEOs" component={CurrentNeosScreen} options={{ headerShown: true, headerLeft: ()=> null, }} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );
