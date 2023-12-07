@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Button, Text, View, Linking, TouchableOpacity, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
+import { onAuthStateChanged } from '@firebase/auth';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 export default DetailsScreen = ({ route, navigation }) => {
     const { item, saved } = route.params;
@@ -78,6 +80,15 @@ export default DetailsScreen = ({ route, navigation }) => {
     );
   };
 
+    // Check if user is signed in
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      onAuthStateChanged(FIREBASE_AUTH, (user) => {
+        console.log('user', user);
+        setUser(user);
+      })
+    }, [])
+
 
     
   // VIEW:
@@ -126,11 +137,11 @@ export default DetailsScreen = ({ route, navigation }) => {
         <Text style={styles.detailsText}>{parseFloat(item.close_approach_data[0].miss_distance.kilometers).toLocaleString('fi-FI', { maximumFractionDigits: 0 })} km</Text>            
       
       </View>
-      {!saved && <TouchableOpacity 
+      {!saved && user && <TouchableOpacity 
         style={styles.saveButton} onPress={saveData}>
           <Text style={styles.itemButtonText}>Save NEO</Text>
       </TouchableOpacity>}
-      {saved && <TouchableOpacity 
+      {saved && user && <TouchableOpacity 
         style={styles.deleteButton} onPress={deleteItem}>
           <Text style={styles.itemButtonText}>Remove saved NEO</Text>
       </TouchableOpacity>}
